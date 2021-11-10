@@ -1,0 +1,20 @@
+{
+  "template": "https://github.com/NarrativeScience/cookiecutter-python-lib",
+  "commit": "f31f5912ab949296517c6d65fc666b11926a5cf8",
+  "checkout": null,
+  "context": {
+    "cookiecutter": {
+      "author_name": "Jonathan Drake",
+      "author_email": "jdrake@narrativescience.com",
+      "description": "Autogenerate Poetry package manifests in a monorepo",
+      "repo_name": "ns-poet",
+      "github_team": "@NarrativeScience/package-plumbers",
+      "package_title": "ns-poet",
+      "package_name": "ns_poet",
+      "python_version": "3.6",
+      "visibility": "public",
+      "_template": "https://github.com/NarrativeScience/cookiecutter-python-lib"
+    }
+  },
+  "directory": null
+}
