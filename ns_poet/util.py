@@ -59,4 +59,4 @@ def write_package_config_file(config_file_path: Path, contents: str) -> None:
 
     """
     with config_file_path.open("w") as f:
-        f.write(contents + "\n")
+        f.write(contents)

@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 @click.group()
 def cli() -> None:
-    """Base CLI command"""
+    """Autogenerate Poetry package manifests in a monorepo"""
     pass
 
 
