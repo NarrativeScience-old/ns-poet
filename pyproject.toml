@@ -9,7 +9,12 @@ homepage = "https://github.com/NarrativeScience/ns-poet"
 repository = "https://github.com/NarrativeScience/ns-poet"
 
 [tool.poetry.dependencies]
-python = "^3.6"
+python = "^3.6.5"
+click = "^8.0.3"
+setuptools = "^58.5.3"
+astor = "^0.8.1"
+networkx = "<2.6"
+toml = "^0.10.2"
 
 [tool.poetry.dev-dependencies]
 pre-commit = "^2.10.1"
@@ -23,3 +28,6 @@ skip = ["pyproject.toml", "ns_poet", "tests", "README.md", ".circleci/config.yml
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+nspoet = "ns_poet.cli:cli"
