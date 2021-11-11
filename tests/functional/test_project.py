@@ -21,5 +21,7 @@ requirements_path = "3rdparty/python/requirements.txt"
 
         run(["git", "init"], cwd=tmpdirname)
         config = mod_ut.PoetProject.from_path(Path(tmpdirname))
-        assert config.import_map_path == Path("3rdparty/python/import-map.json")
-        assert config.requirements_path == Path("3rdparty/python/requirements.txt")
+        assert str(config.import_map_path).endswith("3rdparty/python/import-map.json")
+        assert str(config.requirements_path).endswith(
+            "3rdparty/python/requirements.txt"
+        )
