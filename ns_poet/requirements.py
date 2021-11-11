@@ -2,21 +2,16 @@
 
 from copy import deepcopy
 import glob
-import json
 import logging
 import os
-from pathlib import Path
 import subprocess
 import sys
 import tarfile
 import tempfile
-from typing import Dict, List, Tuple, TYPE_CHECKING
+from typing import Dict, IO, List, Tuple
 import zipfile
 
-import pkg_resources
-
 from ns_poet.project import PROJECT_CONFIG
-
 from .exceptions import (
     DistributionError,
     InvalidTopLevelFile,
@@ -25,18 +20,13 @@ from .exceptions import (
     UnsupportedDistributionFormat,
 )
 
-if TYPE_CHECKING:
-    import io
-
 logger = logging.getLogger(__name__)
 
 # Top-level Python package distribution names to ignore when generating the import map
 IGNORE_TOP_LEVEL_IMPORTS = {"testing", "tests", "test"}
 
 
-def _parse_top_level_imports_from_file(
-    distribution_path, f: "io.TextIOWrapper"
-) -> List[str]:
+def _parse_top_level_imports_from_file(distribution_path: str, f: IO) -> List[str]:
     """Get the top-level import names from a top_level.txt file
 
     Args:
@@ -66,9 +56,7 @@ def _parse_top_level_imports_from_file(
     return imports
 
 
-def _get_project_name_from_metadata_file(
-    distribution_path, f: "io.TextIOWrapper"
-) -> str:
+def _get_project_name_from_metadata_file(distribution_path: str, f: IO) -> str:
     """Get the project name from a METADATA or PKG-INFO file
 
     Args:
@@ -334,7 +322,7 @@ def update_import_map() -> None:
     import_map = PROJECT_CONFIG.load_import_map()
 
     existing_project_names = set(import_map.values())
-    current_project_names = set(req.project_name for req in requirements)
+    current_project_names = set(req.project_name for req in requirements.values())
 
     # New requirements for which we need to go resolve an import name
     new_project_names = current_project_names - existing_project_names
@@ -361,9 +349,11 @@ def update_import_map() -> None:
         del import_map[import_map_inverse[project_name]]
 
     new_requirement_specifiers = [
-        str(req) for req in requirements if req.project_name in new_project_names
+        str(req)
+        for req in requirements.values()
+        if req.project_name in new_project_names
     ]
-    import_map_exceptions = []
+    import_map_exceptions: List[Exception] = []
     if len(new_requirement_specifiers) > 0:
         import_map_exceptions, import_map_updates = _get_import_map_for_requirements(
             new_requirement_specifiers

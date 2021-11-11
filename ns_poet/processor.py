@@ -4,18 +4,17 @@ from multiprocessing import Pool
 import os
 from pathlib import Path
 import re
-from typing import Any, Callable, Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple
 
 import networkx as nx
 
-from .package_targets import PythonPackage, PythonRequirement
-from .project import PROJECT_CONFIG
 from .exceptions import (
     CircularImportsFound,
     DuplicateTarget,
     MultipleSourcePackagesFound,
-    NoTargetFound,
 )
+from .package_targets import PythonPackage
+from .project import PROJECT_CONFIG
 from .util import gather_dependencies_from_module, write_package_config_file
 
 logger = logging.getLogger(__name__)
@@ -33,6 +32,7 @@ class PackageProcessor:
     """
 
     def __init__(self) -> None:
+        """Initializer"""
         # Map of target key to instance of a Python package build target
         self._targets: Dict[str, PythonPackage] = {}
         # Graph of targets
@@ -82,11 +82,11 @@ class PackageProcessor:
 
         # For each target path / package name pair, process and add the dependency to
         # the target's set of dependencies.
-        for (target, _), package_names in zip(
+        for (target, _), (path, package_names) in zip(
             target_paths, imported_package_names_per_path
         ):
             for package_name in package_names:
-                target.add_dependency(self._targets, package_name)
+                target.add_dependency(self._targets, path, package_name)
 
         # Allow each target to set extra dependencies based on their own custom logic.
         # For most targets this will be a no-op.
@@ -112,8 +112,8 @@ class PackageProcessor:
                     (target.config.config_file_path, target.config.to_string())
                 )
 
-        # Create a pool of workers that will render, format, and write each AST module
-        # tree to disk.
+        # Create a pool of workers that will render, format, and write each manifest
+        # file to disk.
         with Pool(processes=PROCESSES) as pool:
             pool.starmap(write_package_config_file, targets_to_save)
 
@@ -121,6 +121,10 @@ class PackageProcessor:
         """Generate package manifest file for a single target.
 
         You must have already called :py:meth:`.register_packages`.
+
+        Args:
+            package_path: path to a Python package
+
         """
         p = PythonPackage(package_path)
         target = self._targets[p.package_name]
@@ -218,36 +222,3 @@ class PackageProcessor:
         cycles = list(nx.simple_cycles(self._target_graph))
         if len(cycles) > 0:
             raise CircularImportsFound(cycles)
-
-    def compute_package_dependencies(
-        self, target_key: str, include_3rdparty: bool = False
-    ) -> List[PythonPackage]:
-        """Compute a topologically-sorted list of dependencies for a given target.
-
-        Args:
-            target_key: Key of the registered build target
-            include_3rdparty: Whether to include or exclude 3rdparty requirements in
-                the list of dependencies
-
-        Returns:
-            list of PythonPackage instances sorted topologically
-
-        """
-        try:
-            target = self._targets[target_key]
-        except KeyError:
-            raise NoTargetFound(
-                f"No target registered named {target_key}."
-                f" Available targets: {', '.join(sorted(self._targets.keys()))}"
-            )
-
-        dependencies = nx.descendants(self._target_graph, target)
-        # Create a new graph with only the dependencies so we can sort
-        subgraph = nx.DiGraph(self._target_graph.subgraph(dependencies))
-        dependencies = list(nx.topological_sort(subgraph))
-        if not include_3rdparty:
-            dependencies = [
-                d for d in dependencies if not isinstance(d, PythonRequirement)
-            ]
-
-        return dependencies

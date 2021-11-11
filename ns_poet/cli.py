@@ -5,8 +5,8 @@ from pathlib import Path
 from typing import Optional
 
 import click
-from ns_poet.processor import PackageProcessor
 
+from ns_poet.processor import PackageProcessor
 from ns_poet.project import PROJECT_CONFIG
 from ns_poet.requirements import update_import_map
 
@@ -50,7 +50,7 @@ def generate(package_path: Optional[Path]) -> None:
     PROJECT_CONFIG.load_requirements()
     processor = PackageProcessor()
     processor.register_packages()
-    # processor.ensure_no_circular_imports()
+    processor.ensure_no_circular_imports()
     if package_path:
         processor.generate_package_manifest(package_path)
     else:

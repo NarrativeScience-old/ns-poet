@@ -74,7 +74,7 @@ repos:
         entry: mypy -p ns_poet
         language: python
         types: [ file, python ]
-        additional_dependencies: [ mypy==0.910 ]
+        additional_dependencies: [ mypy==0.910, types-toml, types-setuptools ]
         pass_filenames: false
 
       - id: flake8
