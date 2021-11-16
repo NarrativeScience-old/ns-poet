@@ -1,11 +1,12 @@
 # ns-poet
 [![](https://img.shields.io/pypi/v/ns_poet.svg)](https://pypi.org/pypi/ns_poet/) [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
 
-Autogenerate Poetry package manifests in a monorepo
+Manage Poetry packages in a monorepo
 
 Features:
 
-- <!-- list of features -->
+- Generate Poetry package manifests
+- Run a command in all packages
 
 Table of Contents:
 
