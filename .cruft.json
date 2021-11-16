@@ -6,7 +6,7 @@
     "cookiecutter": {
       "author_name": "Jonathan Drake",
       "author_email": "jdrake@narrativescience.com",
-      "description": "Autogenerate Poetry package manifests in a monorepo",
+      "description": "Manage Poetry packages in a monorepo",
       "repo_name": "ns-poet",
       "github_team": "@NarrativeScience/package-plumbers",
       "package_title": "ns-poet",
