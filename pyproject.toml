@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ns-poet"
-version = "0.5.0"
+version = "0.6.0"
 description = "Autogenerate Poetry package manifests in a monorepo"
 authors = ["Jonathan Drake <jdrake@narrativescience.com>"]
 license = "BSD-3-Clause"
