@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ns-poet"
-version = "0.5.0"
+version = "0.6.0"
 description = "Autogenerate Poetry package manifests in a monorepo"
 authors = ["Jonathan Drake <jdrake@narrativescience.com>"]
 license = "BSD-3-Clause"
@@ -11,6 +11,7 @@ repository = "https://github.com/NarrativeScience/ns-poet"
 [tool.poetry.dependencies]
 python = "^3.6.5"
 click = ">=7.0"
+cookiecutter = "^1.7.3"
 setuptools = "^58.5.3"
 astor = "^0.8.1"
 networkx = "<2.6"
