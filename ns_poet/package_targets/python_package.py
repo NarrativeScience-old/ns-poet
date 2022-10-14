@@ -164,7 +164,7 @@ class PythonPackage(BuildTarget):
                 converted[dependency.package_name] = DynamicInlineTableDict(
                     path=os.path.relpath(dependency.package_path, self.package_path),
                     develop=True,
-                )
+                )  # type: ignore
             else:
                 raise NotImplementedError(dependency)
 
